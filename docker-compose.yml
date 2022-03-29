@@ -1,0 +1,36 @@
+version: "3" 
+services:
+
+  postgresql:
+    image: postgres:12.6
+    restart: always
+    ports:
+      - "5432:5432"    
+    environment:
+      POSTGRES_USER: tokenizer
+      POSTGRES_PASSWORD: bX07rLZ5Fg
+      POSTGRES_DB: token
+    volumes:
+       - /home/sliang/dbdata:/var/lib/postgresql/data
+    networks:
+       - overlay
+
+  tokenizer:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        buildno: 2
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/app
+      - /home/sliang/logs:/var/log
+    extra_hosts: 
+      - "psql_server:10.50.100.1"
+    networks:
+      - overlay
+
+
+networks:
+  overlay:
